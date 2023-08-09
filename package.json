@@ -1,0 +1,19 @@
+{
+  "name": "sendmail-azure-cs",
+  "version": "1.0.0",
+  "title": "Azure Communication Service Sendmail",
+  "description": "使用 Azure Communication Service 发送邮件",
+  "author": "LittleSkin",
+  "url": "https://github.com/LittleSkinChina",
+  "namespace": "LittleSkin\\SendmailAzureCS",
+  "require": {
+    "blessing-skin-server": "^6"
+  },
+  "enchants": {
+    "config": "Configuration",
+    "icon": {
+      "fa": "mail-bulk",
+      "bg": "aqua"
+    }
+  }
+}
