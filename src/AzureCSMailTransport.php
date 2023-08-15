@@ -12,6 +12,7 @@ use Symfony\Component\Mailer\Transport\AbstractApiTransport;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
 use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\HttpExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;
@@ -52,11 +53,14 @@ class AzureCSMailTransport extends AbstractApiTransport
         ]);
 
         try {
-            $result = $response->toArray(false);
-        } catch (DecodingExceptionInterface) {
+            $result = $response->toArray();
+        } catch (DecodingExceptionInterface | HttpExceptionInterface) {
             $statusCode = $response->getStatusCode();
             foreach($payload['recipients']['to'] as $recipient) {
                 Log::channel('azure-cs')->error('Faild to send email to [' . $payload['recipients']['to'][0]['address'] . '], status code=' . $statusCode . ', body=' . $response->getContent(false));
+            }
+            if($statusCode == 429) { // Rate limit exceeded
+                throw new HttpTransportException('邮件发送失败，请稍后再试，或联系站点管理员。', $response);
             }
             throw new HttpTransportException('邮件发送失败，请联系站点管理员。详细错误：'.$response->getContent(false).sprintf(' (code %d).', $statusCode), $response);
         } catch (TransportExceptionInterface $e) {
