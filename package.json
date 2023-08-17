@@ -10,7 +10,6 @@
     "blessing-skin-server": "^6"
   },
   "enchants": {
-    "config": "Configuration",
     "icon": {
       "fa": "mail-bulk",
       "bg": "aqua"
