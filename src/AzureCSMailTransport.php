@@ -64,9 +64,9 @@ class AzureCSMailTransport extends AbstractApiTransport
             throw new HttpTransportException('邮件发送失败，请联系站点管理员。详细错误：'.$response->getContent(false).sprintf(' (code %d).', $statusCode), $response);
         } catch (TransportExceptionInterface $e) {
             foreach($payload['recipients']['to'] as $recipient) {
-                Log::channel('azure-cs')->error('Faild to send email to [' . $payload['recipients']['to'][0]['address'] . ']. Could not reach the Azure Communiction Service server.');
+                Log::channel('azure-cs')->error('Faild to send email to [' . $payload['recipients']['to'][0]['address'] . ']. Could not reach the Azure Communication Service server.');
             }
-            throw new HttpTransportException('无法连接邮件发送服务器，请联系站点管理员。详细错误：Could not reach the Azure Communiction Service server.', $response, 0, $e);
+            throw new HttpTransportException('无法连接邮件发送服务器，请稍后再试，或联系站点管理员。详细错误：Could not reach the Azure Communication Service server.', $response, 0, $e);
         }
 
         foreach($payload['recipients']['to'] as $recipient) {
